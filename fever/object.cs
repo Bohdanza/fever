@@ -47,6 +47,15 @@ namespace fever
             if(Texture==null)
             {
                 Texture = new DynamicTexture(contentManager, baseName);
+
+                var rnd = new Random();
+
+                int q = rnd.Next(0, Texture.Textures.Count);
+
+                for(int i=0; i<q; i++)
+                {
+                    Texture.Update(contentManager, true);
+                }
             }
 
             Texture.Update(contentManager);

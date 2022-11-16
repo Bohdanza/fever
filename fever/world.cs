@@ -21,6 +21,7 @@ namespace fever
         public int CurrentChunkBegin { get; private set; } = -20;
 
         public List<Object> objects { get; private set; } = new List<Object>();
+        public List<Object> objectsDrawing { get; private set; } = new List<Object>();
 
         public World(ContentManager contentManager)
         {
@@ -48,7 +49,7 @@ namespace fever
             if(Begin>=CurrentChunkBegin+40)
             {
                 DeleteChunk(CurrentChunkBegin);
-
+                
                 CurrentChunkBegin += 20;
 
                 AddChunk(contentManager, 0, CurrentChunkBegin+40);
@@ -57,10 +58,10 @@ namespace fever
 
         public void Draw(SpriteBatch spriteBatch, int x, int y)
         {
-            for(int i=0; i<objects.Count; i++)
+            for(int i=0; i<objectsDrawing.Count; i++)
             {
-                objects[i].Draw(spriteBatch, 
-                    (int)(x + objects[i].X * UnitX - crod * UnitX), (int)(y + objects[i].Y * UnitY));
+                objectsDrawing[i].Draw(spriteBatch, 
+                    (int)(x + objectsDrawing[i].X * UnitX - crod * UnitX), (int)(y + objectsDrawing[i].Y * UnitY));
             }
         }
 
@@ -74,7 +75,7 @@ namespace fever
 
                 for(int i=0; i<mushroomCount; i++)
                 {
-                    objects.Add(new Mushroom(contentManager, rnd.NextDouble() * 20 + position, rnd.NextDouble()*20, 0));
+                    AddObject(new Mushroom(contentManager, rnd.NextDouble() * 20 + position, rnd.NextDouble()*20, 0));
                 }
             }
         }
@@ -83,8 +84,62 @@ namespace fever
         {
             while(objects.Count>0&&objects[0].X<position+20)
             {
-                objects.RemoveAt(0);
+                DeleteObject(objects[0]);
             }
+        }
+
+        public void DeleteObject(Object @object)
+        {
+            objects.Remove(@object);
+            objectsDrawing.Remove(@object);
+        }
+
+        public void AddObject(Object @object)
+        {
+            if(objects.Count==0)
+            {
+                objectsDrawing.Add(@object);
+                objects.Add(@object);
+
+                return;
+            }
+
+            int l = 0, r = objectsDrawing.Count-1; 
+
+            while(l<r-1)
+            {
+                int mid = (l + r) / 2;
+
+                if(objectsDrawing[mid].Y<@object.Y)
+                    l = mid;
+                else
+                    r = mid;
+            }
+
+            if (objectsDrawing[r].Y <= @object.Y)
+                objectsDrawing.Insert(r + 1, @object);
+            else
+                objectsDrawing.Insert(l + 1, @object);
+
+
+            l = 0; r = objects.Count-1;
+
+            while (l < r - 1)
+            {
+                int mid = (l + r) / 2;
+
+                if (objects[mid].X < @object.X)
+                    l = mid;
+                else
+                    r = mid;
+            }
+
+            if (objectsDrawing[r].X <= @object.X)
+            {
+                objects.Insert(r + 1, @object);
+            }
+            else
+                objects.Insert(l + 1, @object);
         }
     }
 }

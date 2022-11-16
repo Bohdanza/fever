@@ -20,7 +20,7 @@ namespace fever
         [JsonProperty]
         public string BaseName { get; protected set; }
 
-        protected List<Texture2D> Textures { get; set; }
+        public List<Texture2D> Textures { get; protected set; }
         public int CurrentTexture { get; protected set; }
 
         public DynamicTexture(ContentManager contentManager, string name)
@@ -61,11 +61,11 @@ namespace fever
         /// <summary>
         /// used to move current frame and stuff
         /// </summary>
-        public void Update(ContentManager contentManager)
+        public void Update(ContentManager contentManager, bool ignoreTime=false)
         {
             TimeSinceLastUpdate++;
 
-            if (TimeSinceLastUpdate > FrameDelay)
+            if (TimeSinceLastUpdate > FrameDelay || ignoreTime)
             {
                 TimeSinceLastUpdate = 0;
 

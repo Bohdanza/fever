@@ -60,7 +60,7 @@ namespace fever
                 Exit();
 
             world.Update(Content);
-
+            
             base.Update(gameTime);
         }
 
