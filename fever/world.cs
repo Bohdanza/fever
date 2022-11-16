@@ -43,10 +43,17 @@ namespace fever
             {
                 crod += 0.1f;
 
-                Begin = (int)Math.Floor(crod);
+                Begin = Math.Max(Begin, (int)Math.Floor(crod));
             }
 
-            if(Begin>=CurrentChunkBegin+40)
+            if (ks.IsKeyDown(Keys.A))
+            {
+                crod -= 0.1f;
+
+                crod = Math.Max(CurrentChunkBegin, crod);
+            }
+
+            if (Begin>=CurrentChunkBegin+40)
             {
                 DeleteChunk(CurrentChunkBegin);
                 
@@ -86,7 +93,7 @@ namespace fever
             {
                 DeleteObject(objects[0]);
             }
-        }
+        }  
 
         public void DeleteObject(Object @object)
         {
